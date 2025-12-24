@@ -2,16 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-
   <!-- REQUIRED FOR MOBILE AR -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>AR Test</title>
-
   <script type="module"
     src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
   </script>
-
   <style>
     body { margin: 0; }
     model-viewer {
@@ -21,13 +17,13 @@
   </style>
 </head>
 <body>
-
 <model-viewer
   src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
   ar
-  ar-modes="scene-viewer webxr"
-  camera-controls>
+  ar-modes="scene-viewer webxr quick-look"
+  camera-controls
+  auto-rotate
+  touch-action="pan-y">
 </model-viewer>
-
 </body>
 </html>
