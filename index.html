@@ -23,9 +23,8 @@
     }
     #start {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      top: 20px;
+      left: 20px;
       z-index: 1;
       padding: 10px 20px;
       font-size: 18px;
@@ -64,9 +63,10 @@
 
   startBtn.onclick = async () => {
     await viewer.updateComplete;
-    startBtn.style.display = 'none';  // Hide button after start
+    // No fullscreen or hiding—button stays visible in corner for ongoing access
     await audio.play();   // user gesture → works
     viewer.play();        // plays animation if present
+    startBtn.textContent = 'Playing';  // Optional: Update button text for feedback
   };
 </script>
 
