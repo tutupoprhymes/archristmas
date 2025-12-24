@@ -4,26 +4,71 @@
   <meta charset="UTF-8" />
   <!-- REQUIRED FOR MOBILE AR -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AR Test</title>
+  <title>AR Model Viewer</title>
+
+  <audio id="audio" src="assets/sounds/til_til.mp3"></audio>
+
   <script type="module"
     src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
   </script>
+
   <style>
-    body { margin: 0; }
+    body {
+      margin: 0;
+      background: #000;
+    }
     model-viewer {
       width: 100vw;
       height: 100vh;
     }
+    #start {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      padding: 10px 20px;
+      font-size: 18px;
+      background: rgba(255, 255, 255, 0.8);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
   </style>
 </head>
+
 <body>
+
+<button id="start">Start</button>
+
 <model-viewer
-  src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
+  id="viewer"
+  src="assets/models/winterfest_bushranger_fortnite_skin.glb"
   ar
   ar-modes="scene-viewer webxr quick-look"
   camera-controls
+  autoplay
+  animation-name="*"
+  animation-loop
+  environment-image="neutral"
+  camera-orbit="0deg 75deg 3m"
+  field-of-view="30deg"
   auto-rotate
   touch-action="pan-y">
 </model-viewer>
+
+<script>
+  const audio = document.getElementById('audio');
+  const viewer = document.getElementById('viewer');
+  const startBtn = document.getElementById('start');
+
+  startBtn.onclick = async () => {
+    await viewer.updateComplete;
+    startBtn.style.display = 'none';  // Hide button after start
+    await audio.play();   // user gesture → works
+    viewer.play();        // plays animation if present
+  };
+</script>
+
 </body>
 </html>
