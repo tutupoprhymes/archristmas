@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <title>AR Model Viewer</title>
 
-  <!-- Model Viewer -->
+  <audio id="audio" src="assets/sounds/til_til.mp3"></audio>
+
   <script type="module"
     src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
   </script>
@@ -20,19 +21,35 @@
     }
   </style>
 </head>
+
 <body>
 
+<button id="start">Start</button>
+
 <model-viewer
-    src="assets/models/winterfest_bushranger_fortnite_skin.glb"
-    autoplay
-    animation-name="*"
-    animation-loop
-    camera-orbit="0deg 75deg 3m"
-    min-camera-orbit="auto auto 1m"
-    max-camera-orbit="auto auto 10m"
-    field-of-view="30deg"
-    environment-image="neutral">
+  id="viewer"
+  src="assets/models/winterfest_bushranger_fortnite_skin.glb"
+  ar
+  ar-modes="scene-viewer webxr"
+  camera-controls
+  autoplay
+  animation-name="*"
+  animation-loop
+  environment-image="neutral"
+  camera-orbit="0deg 75deg 3m"
+  field-of-view="30deg">
 </model-viewer>
+
+<script>
+  const audio = document.getElementById('audio');
+  const viewer = document.getElementById('viewer');
+
+  document.getElementById('start').onclick = async () => {
+    await viewer.updateComplete;
+    await audio.play();   // user gesture → works
+    viewer.play();        // plays animation if present
+  };
+</script>
 
 </body>
 </html>
