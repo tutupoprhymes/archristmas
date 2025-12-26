@@ -2,17 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <!-- REQUIRED FOR MOBILE AR -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AR Model Viewer</title>
+  <title>AR Model Viewer - Walking Animation</title>
   <audio id="audio" src="assets/sounds/til_til.mp3"></audio>
-  <script type="module"
-    src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
-  </script>
+
+  <!-- Model Viewer -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
   <style>
     body {
       margin: 0;
       background: #000;
+      overflow: hidden;
     }
     model-viewer {
       width: 100vw;
@@ -25,7 +26,7 @@
       z-index: 1;
       padding: 10px 20px;
       font-size: 18px;
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.9);
       border: none;
       border-radius: 5px;
       cursor: pointer;
@@ -33,7 +34,9 @@
   </style>
 </head>
 <body>
-<button id="start">Song</button>
+
+<button id="start">Play</button>
+
 <model-viewer
   id="viewer"
   src="assets/models/walking.glb"
@@ -42,25 +45,37 @@
   ar-modes="scene-viewer webxr quick-look"
   camera-controls
   autoplay
-  animation-name="mixamo.com"
   animation-loop
   environment-image="neutral"
   camera-orbit="0deg 75deg 3m"
   field-of-view="30deg"
-  auto-rotate
+  auto-rotate="false"
   touch-action="pan-y">
 </model-viewer>
+
 <script>
   const audio = document.getElementById('audio');
   const viewer = document.getElementById('viewer');
   const startBtn = document.getElementById('start');
+
+  // Check available animations in the console
+  viewer.addEventListener('load', () => {
+    console.log("Available animations:", viewer.availableAnimations);
+  });
+
   startBtn.onclick = async () => {
     await viewer.updateComplete;
-    // No fullscreen or hiding—button stays visible in corner for ongoing access
-    await audio.play(); // user gesture → works
-    viewer.play(); // plays animation if present
-    startBtn.textContent = 'Playing'; // Optional: Update button text for feedback
+
+    // Set the correct animation name from Mixamo GLB
+    // Make sure this matches exactly what you see in console
+    const animationName = viewer.availableAnimations[0] || "mixamo.com";
+    viewer.animationName = animationName;
+
+    viewer.play();   // Start the walking animation
+    await audio.play(); // Start the music
+    startBtn.textContent = 'Playing';
   };
 </script>
+
 </body>
 </html>
