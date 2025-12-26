@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AR Model Viewer - Walking Animation</title>
   <audio id="audio" src="assets/sounds/til_til.mp3"></audio>
-
   <!-- Model Viewer -->
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-
   <style>
     body {
       margin: 0;
@@ -34,9 +32,7 @@
   </style>
 </head>
 <body>
-
 <button id="start">Play</button>
-
 <model-viewer
   id="viewer"
   src="assets/models/walking.glb"
@@ -44,38 +40,48 @@
   ar
   ar-modes="scene-viewer webxr quick-look"
   camera-controls
-  autoplay
-  animation-loop
   environment-image="neutral"
   camera-orbit="0deg 75deg 3m"
   field-of-view="30deg"
   auto-rotate="false"
-  touch-action="pan-y">
+  touch-action="pan-y"
+  animation-crossfade-duration="300ms">
 </model-viewer>
-
 <script>
   const audio = document.getElementById('audio');
   const viewer = document.getElementById('viewer');
   const startBtn = document.getElementById('start');
 
-  // Check available animations in the console
+  // Set up animation on model load
   viewer.addEventListener('load', () => {
-    console.log("Available animations:", viewer.availableAnimations);
+    console.log("Model loaded. Available animations:", viewer.availableAnimations);
+    console.log("Animation duration:", viewer.duration, "seconds");
+    if (viewer.availableAnimations.length > 0) {
+      // Set to Mixamo's standard name
+      viewer.animationName = "mixamo.com";
+      console.log("Set animationName to:", viewer.animationName);
+    } else {
+      console.error("No animations found in GLB – check export from Mixamo.");
+    }
+  });
+
+  // Handle load errors
+  viewer.addEventListener('loadfailed', (event) => {
+    console.error("Model load failed:", event.detail);
   });
 
   startBtn.onclick = async () => {
     await viewer.updateComplete;
-
-    // Set the correct animation name from Mixamo GLB
-    // Make sure this matches exactly what you see in console
-    const animationName = viewer.availableAnimations[0] || "mixamo.com";
-    viewer.animationName = animationName;
-
-    viewer.play();   // Start the walking animation
-    await audio.play(); // Start the music
-    startBtn.textContent = 'Playing';
+    if (viewer.animationName) {
+      viewer.play({ repetitions: Infinity }); // Loop forever
+      await audio.play(); // Start the music
+      startBtn.textContent = 'Playing';
+      startBtn.disabled = true; // Prevent spam-clicks
+      console.log("Started playing animation:", viewer.animationName);
+    } else {
+      console.error("No animation set – check console for available animations.");
+    }
   };
 </script>
-
 </body>
 </html>
